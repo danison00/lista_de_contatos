@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,11 +52,38 @@ public class GreetingsController {
     
     @PostMapping(value="salvar-contato")
     @ResponseBody
-    public ResponseEntity<Contato> salvar(@RequestBody Contato contato) {
+    public ResponseEntity<String>salvar(@RequestBody Contato contato) {
     	
-    	Contato cont = contatoRepository.save(contato);
-    	return new ResponseEntity<Contato>(cont, HttpStatus.CREATED);
+    	contatoRepository.save(contato);
+    	System.out.println(contato);
+    	return new ResponseEntity<String>("Contato Salvo!",HttpStatus.CREATED);
    
+    }
+    
+    
+    @DeleteMapping(value="apagar-contato")
+    @ResponseBody
+    public ResponseEntity<String> deletar(@RequestParam(name="id") Long id){
+  
+    	
+    	contatoRepository.deleteById(id);
+    	
+    	return new ResponseEntity<String>("Contato Excluído!",HttpStatus.OK); 
+    	
+    	
+    }
+    
+    
+    @PutMapping(value="atualizar-contato")
+    @ResponseBody
+    public ResponseEntity<String> atualizar(@RequestBody Contato contato){
+    	
+    	
+    	contatoRepository.saveAndFlush(contato);
+    	
+    	return new ResponseEntity<String>("Contato Atualizado!",HttpStatus.OK);
+    	
+    	
     }
     
     

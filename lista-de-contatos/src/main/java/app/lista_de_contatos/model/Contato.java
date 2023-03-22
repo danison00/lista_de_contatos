@@ -16,7 +16,7 @@ public class Contato implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_contato")
 	private Long id;
 
 	private String nome;
