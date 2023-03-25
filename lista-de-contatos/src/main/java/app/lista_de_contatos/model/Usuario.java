@@ -25,10 +25,10 @@ public class Usuario implements UserDetails{
 
 	
 	@Column(nullable=false, unique=true )
-	private String usuario;
+	private String username;
 	
-	@Column(nullable=false, unique=true )
-	private String senha;
+	@Column(nullable=false)
+	private String password;
 
 	
 	
@@ -42,18 +42,18 @@ public class Usuario implements UserDetails{
 
 
 	public String getUser() {
-		return usuario;
+		return username;
 	}
 
 	public void setUser(String user) {
-		this.usuario = user;
+		this.username = user;
 	}
 
 	public void setPassword(String password) {
-		this.senha = password;
+		this.password = password;
 	}
 	public String getSenha() {
-		return senha;
+		return password;
 	}
 
 
@@ -66,13 +66,13 @@ public class Usuario implements UserDetails{
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return this.senha;
+		return this.password;
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return this.usuario;
+		return this.username;
 	}
 
 	@Override
