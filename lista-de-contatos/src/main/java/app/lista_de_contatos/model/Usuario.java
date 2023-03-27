@@ -1,13 +1,15 @@
 package app.lista_de_contatos.model;
 
 import java.util.Collection;
-import java.util.UUID;
+import java.util.List;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +23,7 @@ public class Usuario implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private UUID id;
+	private Long id;
 
 	
 	@Column(nullable=false, unique=true )
@@ -30,13 +32,31 @@ public class Usuario implements UserDetails{
 	@Column(nullable=false)
 	private String password;
 
+	@OneToMany(mappedBy = "usuario")
+    private List<Contato> contatos;
 	
 	
-	public UUID getId() {
+
+
+	
+
+	public List<Contato> getContatos() {
+		return contatos;
+	}
+
+	public void setContatos(Contato contato) {
+		this.contatos.add(contato);
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
