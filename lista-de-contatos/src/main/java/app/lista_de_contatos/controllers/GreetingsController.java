@@ -41,26 +41,29 @@ public class GreetingsController {
 	@ResponseBody
 	public ResponseEntity<?> listar(@PathVariable Long id_user) {
 
-		Optional<Usuario> user = userRepository.findById(id_user);
+		if (id_user != null) {
 
-		if (user.isPresent()) {
+			Optional<Usuario> user = userRepository.findById(id_user);
 
-			Usuario usuario = (Usuario) user.orElse(null);
+			if (user.isPresent()) {
 
-			List<Contato> contatosComUser = contatoRepository.findByUsuario(usuario);
-			List<Object[]> contatosSemUser = new ArrayList<>();
+				Usuario usuario = (Usuario) user.orElse(null);
 
-			for (Contato contato : contatosComUser) {
-				
-				String cont[] = {contato.getNome(), contato.getTelefone(), contato.getEmail()};
-				contatosSemUser.add(cont);
+				List<Contato> contatosComUser = contatoRepository.findByUsuario(usuario);
+				List<Object[]> contatosSemUser = new ArrayList<>();
 
+				for (Contato contato : contatosComUser) {
+
+					String cont[] = { contato.getNome(), contato.getTelefone(), contato.getEmail() };
+					contatosSemUser.add(cont);
+
+				}
+
+				return new ResponseEntity<List<Object[]>>(contatosSemUser, HttpStatus.OK);
 			}
-
-			return new ResponseEntity<List<Object[]>>(contatosSemUser, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>("Usuario não encontrado", HttpStatus.OK);
+		return new ResponseEntity<String>("Verifique o caminho", HttpStatus.OK);
 
 	}
 
@@ -103,5 +106,5 @@ public class GreetingsController {
 		return new ResponseEntity<String>("Contato Atualizado!", HttpStatus.OK);
 
 	}
-	
+
 }
