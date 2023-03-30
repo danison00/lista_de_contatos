@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,10 +25,6 @@ import app.lista_de_contatos.model.Usuario;
 import app.lista_de_contatos.repository.ContatoRepository;
 import app.lista_de_contatos.repository.UserRepository;
 
-/**
- *
- * A sample greetings controller to return greeting text
- */
 @RestController
 public class GreetingsController {
 
@@ -50,16 +47,16 @@ public class GreetingsController {
 				Usuario usuario = (Usuario) user.orElse(null);
 
 				List<Contato> contatosComUser = contatoRepository.findByUsuario(usuario);
-				List<Object[]> contatosSemUser = new ArrayList<>();
+				List<Contato> contatosSemUser = new ArrayList<>();
 
 				for (Contato contato : contatosComUser) {
 
-					String cont[] = { contato.getNome(), contato.getTelefone(), contato.getEmail() };
-					contatosSemUser.add(cont);
+					contato.setUsuario(null);
+					contatosSemUser.add(contato);
 
 				}
 
-				return new ResponseEntity<List<Object[]>>(contatosSemUser, HttpStatus.OK);
+				return new ResponseEntity<List<Contato>>(contatosSemUser, HttpStatus.OK);
 			}
 		}
 
@@ -67,6 +64,7 @@ public class GreetingsController {
 
 	}
 
+	
 	@PostMapping(value = "{id_user}/salvar-contato")
 	@ResponseBody
 	public ResponseEntity<String> salvar(@RequestBody Contato contato, @PathVariable Long id_user) {
@@ -87,6 +85,7 @@ public class GreetingsController {
 
 	}
 
+	
 	@DeleteMapping(value = "apagar-contato")
 	@ResponseBody
 	public ResponseEntity<String> deletar(@RequestParam(name = "id") Long id) {
@@ -97,6 +96,7 @@ public class GreetingsController {
 
 	}
 
+	
 	@PutMapping(value = "atualizar-contato")
 	@ResponseBody
 	public ResponseEntity<String> atualizar(@RequestBody Contato contato) {
@@ -104,6 +104,63 @@ public class GreetingsController {
 		contatoRepository.saveAndFlush(contato);
 
 		return new ResponseEntity<String>("Contato Atualizado!", HttpStatus.OK);
+
+	}
+
+	
+	@PostMapping(value = "novo-usuario")
+	@ResponseBody
+	public ResponseEntity<String> criarUsuario(@RequestBody Usuario usuario) {
+
+		userRepository.save(usuario);
+
+		return new ResponseEntity<String>("Usuario Criado!", HttpStatus.OK);
+	}
+
+	
+	@GetMapping(value = "usuarios")
+	@ResponseBody
+	public ResponseEntity<?> listarUsuario() {
+
+		List<Usuario> usuariosComContato = userRepository.findAll();
+		if (usuariosComContato.isEmpty())
+		{
+
+			return new ResponseEntity<String>("Não existe usuários cadastrados!", HttpStatus.OK);
+		}
+
+		
+		List<Usuario> usuariosSemContato = new ArrayList<>();
+		for (Usuario usuario : usuariosComContato) 
+		{
+			
+			usuario.setContatos(null);
+			usuariosSemContato.add(usuario);
+		}
+
+		return new ResponseEntity<List<Usuario>>(usuariosSemContato, HttpStatus.OK);
+
+		
+
+	}
+	@DeleteMapping(value = "apagar-usuario/{id}")
+	@ResponseBody
+	public ResponseEntity<?> apagarUsuario(@PathVariable(name="id") Long id) {
+
+		Optional<Usuario> usuario = userRepository.findById(id);
+		if (!usuario.isEmpty())
+		{
+			
+			userRepository.deleteById(id);
+	
+			
+			return new ResponseEntity<String>("Usuário Excluido!", HttpStatus.OK);
+		}
+
+		
+
+		return new ResponseEntity<String>("Usuario não existe!", HttpStatus.OK);
+		
 
 	}
 

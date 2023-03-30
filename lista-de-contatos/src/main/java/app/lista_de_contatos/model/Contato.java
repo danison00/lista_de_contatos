@@ -2,7 +2,6 @@ package app.lista_de_contatos.model;
 
 import java.io.Serializable;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "Contato")
@@ -32,7 +34,8 @@ public class Contato implements Serializable {
 	
 	@ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Usuario usuario;
 	
 	
 

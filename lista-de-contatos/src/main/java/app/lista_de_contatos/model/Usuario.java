@@ -3,7 +3,7 @@ package app.lista_de_contatos.model;
 import java.util.Collection;
 import java.util.List;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +32,7 @@ public class Usuario implements UserDetails{
 	@Column(nullable=false)
 	private String password;
 
-	@OneToMany(mappedBy = "usuario")
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Contato> contatos;
 	
 	
@@ -44,9 +44,19 @@ public class Usuario implements UserDetails{
 		return contatos;
 	}
 
-	public void setContatos(Contato contato) {
-		this.contatos.add(contato);
+
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
+
+
+
+	public void setContatos(List<Contato> contatos) {
+		this.contatos = contatos;
+	}
+
+
 
 	public void setUsername(String username) {
 		this.username = username;
@@ -60,21 +70,6 @@ public class Usuario implements UserDetails{
 		this.id = id;
 	}
 
-
-	public String getUser() {
-		return username;
-	}
-
-	public void setUser(String user) {
-		this.username = user;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getSenha() {
-		return password;
-	}
 
 
 	@Override
